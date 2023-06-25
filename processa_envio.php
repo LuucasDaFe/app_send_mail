@@ -15,8 +15,8 @@
         private $assunto = null;
         private $mensagem = null;
 
-        public function __get($atributto){
-            return $this->atributo;
+        public function __get($atributo){
+            return $this->$atributo;
         }
         public function __set($atributo, $valor){
             $this->$atributo = $valor;
@@ -36,7 +36,7 @@
     $mensagem->__set('assunto', $_POST['assunto']);
     $mensagem->__set('mensagem', $_POST['mensagem']);
 
-    //print_r($mensagem);
+    print_r($mensagem);
 
     if(!$mensagem->mensagemValida()){
         echo 'Mensage não é válida';
@@ -49,34 +49,34 @@
         //Server settings
         $mail->SMTPDebug = 2;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'smtp.example.com';                     //Set the SMTP server to send through
+        $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
         $mail->Username   = 'labraao957@gmail.com';                     //SMTP username
-        $mail->Password   = 'cr7melhor';                               //SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->Password   = 'ilrdwyecckxwhyht';                               //SMTP password
+        $mail->SMTPSecure = 'tls';            //Enable implicit TLS encryption
+        $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('from@example.com', 'Mailer');
-        $mail->addAddress('joe@example.net', 'Joe User');     //Add a recipient
-        $mail->addAddress('ellen@example.com');               //Name is optional
-        $mail->addReplyTo('info@example.com', 'Information');
-        $mail->addCC('cc@example.com');
-        $mail->addBCC('bcc@example.com');
+        $mail->setFrom('labraao957@gmail.com', 'Web Completo Remetente');
+        $mail->addAddress($mensagem->__get('para'));     //Add a recipient
+        //$mail->addReplyTo('info@example.com', 'Information');
+        //$mail->addCC('cc@example.com');
+        //$mail->addBCC('bcc@example.com');
 
         //Attachments
-        $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-        $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+        //$mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+        //$mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
 
         //Content
         $mail->isHTML(true);                                  //Set email format to HTML
-        $mail->Subject = 'Here is the subject';
-        $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-        $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+        $mail->Subject = $mensagem->__get('assunto');
+        $mail->Body    = $mensagem->__get('mensagem');
+        $mail->AltBody = 'É necessário utilizar um client que suporte HTML para ter acesso total ao conteúdo dessa mensagem';
 
         $mail->send();
-        echo 'Message has been sent';
+        echo 'E-mail enviado com sucesso';
     } catch (Exception $e) {
         echo 'Não foi possivel enviar esse e-mail! Por favor tente novamente mais tarde';
         echo "Detalhes do erro: {$mail->ErrorInfo}";
     }
+    
